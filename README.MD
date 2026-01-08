@@ -1,7 +1,9 @@
 # Multi-Camera Video AI: Modern Learning Path (2025)
 
 **Last Updated**: January 2026
+
 **Framework Versions**: DeepStream 8.0, Savant 0.6.0, YOLO11, GStreamer 1.24+
+
 **Target Hardware**: NVIDIA Jetson (Orin/Thor) & Data Center GPUs (Ampere/Ada/Hopper/Blackwell)
 
 ---
