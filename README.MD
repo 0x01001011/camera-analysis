@@ -1,9 +1,7 @@
 # Multi-Camera Video AI: Modern Learning Path (2025)
 
 **Last Updated**: January 2026
-
 **Framework Versions**: DeepStream 8.0, Savant 0.6.0, YOLO11, GStreamer 1.24+
-
 **Target Hardware**: NVIDIA Jetson (Orin/Thor) & Data Center GPUs (Ampere/Ada/Hopper/Blackwell)
 
 ---
@@ -132,6 +130,20 @@ cap.release()
 ### 💡 Skeptical note
 
 If it stutters here, don’t even think “DeepStream”. Fix *this* first.
+
+### 🧪 RTSP Simulation (Dev Setup — fast + repeatable)
+
+- **Option A (recommended)**: MediaMTX + FFmpeg (loop a file → multiple “camera” URLs)
+  - Start server: `docker run --rm -it -p 8554:8554 bluenviron/mediamtx:latest`
+  - Publish stream: `ffmpeg -re -stream_loop -1 -i sample.mp4 -c:v libx264 -preset veryfast -tune zerolatency -f rtsp rtsp://localhost:8554/cam01`
+  - Verify: `ffplay -rtsp_transport tcp rtsp://localhost:8554/cam01`
+  - Scale: run more publishers → `/cam02`, `/cam03`, …
+- **Option B (synthetic)**: `gst-rtsp-server` `test-launch` (no MP4 needed)
+  - Run: `./test-launch "( videotestsrc ! x264enc ! rtph264pay name=pay0 pt=96 )"`
+  - View: `rtsp://127.0.0.1:8554/test`
+- **Failure injection (best practice)**: on Linux use `tc netem` (latency/jitter/loss). On macOS, use Network Link Conditioner or test via a Linux VM.
+
+**Sources**: MediaMTX `https://github.com/bluenviron/mediamtx`, docs `https://mediamtx.org/docs/usage/basic-usage`; GStreamer RTSP `https://gstreamer.freedesktop.org/documentation/rtsp/`; `tc-netem` `https://man7.org/linux/man-pages/man8/tc-netem.8.html`
 
 ---
 
